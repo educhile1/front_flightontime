@@ -1,5 +1,72 @@
 # React + TypeScript + Vite
 
+## Descripción del Proyecto
+
+Esta aplicación frontend permite pronosticar si un vuelo llegará a tiempo o tendrá retrasos. Utiliza una interfaz intuitiva construida con React y TypeScript para consultar información de vuelos y mostrar estadísticas relevantes.
+
+### Características
+
+- Formulario para consultar vuelos
+- Estadísticas de puntualidad
+- Visualización de datos con gráficos
+- Integración con API de vuelos
+
+### Tecnologías Utilizadas
+
+- **React 19** - Framework de UI
+- **TypeScript** - Tipado estático
+- **Vite** - Herramienta de construcción rápida
+- **Tailwind CSS** - Framework de estilos
+- **Recharts** - Biblioteca de gráficos
+- **Axios** - Cliente HTTP
+- **Lucide React** - Iconos
+
+## Instalación y Uso
+
+### Prerrequisitos
+
+- Node.js (versión 18 o superior)
+- npm o yarn
+
+### Instalación
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/educhile1/front_flightontime.git
+   cd front_flightontime
+   ```
+
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+
+### Ejecutar en Desarrollo
+
+```bash
+npm run dev
+```
+
+Esto iniciará el servidor de desarrollo en `http://localhost:5173`.
+
+### Construir para Producción
+
+```bash
+npm run build
+```
+
+### Vista Previa de Producción
+
+```bash
+npm run preview
+```
+
+### Linting
+
+```bash
+npm run lint
+```
+
 Esta plantilla proporciona una configuración mínima para hacer funcionar React en Vite con HMR y algunas reglas de ESLint.
 
 Actualmente, hay dos plugins oficiales disponibles:
