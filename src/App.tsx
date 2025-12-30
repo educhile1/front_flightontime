@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlightForm } from './components/FlightForm';
 import { FlightStats } from './components/FlightStats';
-import { fetchFlightData, type FlightData } from './services/api';
+import { type FlightData } from './services/api';
 
 function App() {
   const [data, setData] = React.useState<FlightData | null>(null);
@@ -16,16 +16,28 @@ function App() {
     handleSearch('Latam', 'GIG', 'GRU', '01/01/2026');
   }, []);
 
-  const handleSearch = async (airline: string, origin: string, destination: string, date: string) => {
+  const handleSearch = async (airline: string, _origin: string, _destination: string, _date: string) => {
     setIsLoading(true);
-    try {
-      const result = await fetchFlightData(airline, origin, destination, date);
-      setData(result);
-    } catch (error) {
-      console.error(error);
-    } finally {
+
+    // Simulate API delay for better UX
+    setTimeout(() => {
+      // Generate two random numbers summing to 100
+      const onTime = Math.floor(Math.random() * 101); // 0 to 100
+      const delay = 100 - onTime;
+
+      // Generate random average delay minutes (e.g., 0 to 120 minutes)
+      const avgDelay = Math.floor(Math.random() * 121);
+
+      const newData: FlightData = {
+        airline: airline,
+        onTimePercentage: onTime,
+        delayPercentage: delay,
+        averageDelayMinutes: avgDelay,
+      };
+
+      setData(newData);
       setIsLoading(false);
-    }
+    }, 500);
   };
 
   return (
