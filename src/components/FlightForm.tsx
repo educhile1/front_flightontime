@@ -8,13 +8,22 @@ interface FlightFormProps {
     isLoading: boolean;
 }
 
-interface Destino {
+interface AirportOption {
     id: number;
     nombre: string;
     nombre_corto: string;
 }
 
-const DESTINOS: Destino[] = [
+const ORIGENES: AirportOption[] = [
+    { id: 1, nombre: 'Rio de Janeiro', nombre_corto: 'GIG' },
+    { id: 2, nombre: 'São Paulo', nombre_corto: 'GRU' },
+    { id: 3, nombre: 'Santiago', nombre_corto: 'SCL' },
+    { id: 4, nombre: 'Buenos Aires', nombre_corto: 'EZE' },
+    { id: 5, nombre: 'Miami', nombre_corto: 'MIA' },
+    { id: 6, nombre: 'New York', nombre_corto: 'JFK' },
+];
+
+const DESTINOS: AirportOption[] = [
     { id: 1, nombre: 'São Paulo', nombre_corto: 'GRU' },
     { id: 2, nombre: 'Rio de Janeiro', nombre_corto: 'GIG' },
     { id: 3, nombre: 'Santiago', nombre_corto: 'SCL' },
@@ -51,12 +60,22 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
 
                 <div className="flex flex-col">
                     <label className="text-xs font-bold uppercase tracking-wider mb-1 text-gray-700">Origen</label>
-                    <input
-                        type="text"
-                        value={origin}
-                        onChange={(e) => setOrigin(e.target.value)}
-                        className="border border-gray-400 p-2 text-sm outline-none focus:border-black transition-colors"
-                    />
+                    <div className="relative">
+                        <select
+                            value={origin}
+                            onChange={(e) => setOrigin(e.target.value)}
+                            className="w-full border border-gray-400 p-2 text-sm outline-none focus:border-black transition-colors appearance-none bg-white"
+                        >
+                            {ORIGENES.map((opt) => (
+                                <option key={opt.id} value={opt.nombre_corto}>
+                                    {opt.nombre} ({opt.nombre_corto})
+                                </option>
+                            ))}
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="flex flex-col">
