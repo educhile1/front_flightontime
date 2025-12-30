@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell } from 'recharts';
 import type { FlightData } from '../services/api';
 
 interface FlightStatsProps {
@@ -25,27 +25,28 @@ export const FlightStats: React.FC<FlightStatsProps> = ({ data }) => {
                 {/* Labels outside the chart as in image? Image has them with text. */}
                 {/* We can use absolute positioning for the labels 'Posibilidad salir en hora' etc */}
 
-                <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                        <Pie
-                            data={chartData}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={60}
-                            outerRadius={100}
-                            fill="#8884d8"
-                            paddingAngle={0}
-                            dataKey="value"
-                            startAngle={90}
-                            endAngle={450}
-                            stroke="none"
-                        >
-                            {chartData.map((_, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                            ))}
-                        </Pie>
-                    </PieChart>
-                </ResponsiveContainer>
+                {/* ResponsiveContainer causes issues with flex/modal sometimes (width -1 error). 
+                    Since we have a fixed w-64 h-64 (256px) container, we can just set fixed size on PieChart. 
+                */}
+                <PieChart width={256} height={256}>
+                    <Pie
+                        data={chartData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={60}
+                        outerRadius={100}
+                        fill="#8884d8"
+                        paddingAngle={0}
+                        dataKey="value"
+                        startAngle={90}
+                        endAngle={450}
+                        stroke="none"
+                    >
+                        {chartData.map((_, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                    </Pie>
+                </PieChart>
 
                 {/* Labels overlay - Manually placed to match visual roughly */}
                 <div className="absolute top-0 left-0 text-[10px] text-gray-800 -translate-y-2 -translate-x-4 w-32 text-center leading-3">
