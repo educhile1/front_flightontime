@@ -15,10 +15,10 @@ function App() {
   // We'll set a default state for the demo if user interactions are needed.
   React.useEffect(() => {
     // Optional: Load default data
-    handleSearch('Latam', 'GIG', 'GRU', '01/01/2026');
+    handleSearch('Latam', 'GIG', 'GRU', '01/01/2026', '12:00');
   }, []);
 
-  const handleSearch = async (airline: string, origin: string, destination: string, date: string) => {
+  const handleSearch = async (airline: string, origin: string, destination: string, date: string, time: string) => {
     setIsLoading(true);
     setMessage(null);
     setIsError(false);
@@ -31,7 +31,7 @@ function App() {
       return;
     }
 
-    setMessage(`Consultando: Vuelo de ${origin} a ${destination} por ${airline} el ${date}`);
+    setMessage(`Consultando: Vuelo de ${origin} a ${destination} por ${airline} el ${date} a las ${time}`);
 
     // Simulate API delay for better UX
     setTimeout(() => {
@@ -71,7 +71,7 @@ function App() {
         </div>
 
         {/* Content */}
-        <div className="flex-1 p-6 lg:p-12 flex flex-col items-center overflow-y-auto lg:overflow-visible">
+        <div className="flex-1 p-6 lg:p-12 flex flex-col items-center overflow-y-auto lg:overflow-y-auto">
 
           <h1 className="text-3xl lg:text-4xl text-black font-medium mb-8 tracking-tight text-center">Revisión de vuelos</h1>
 

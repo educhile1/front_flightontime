@@ -9,6 +9,7 @@ Esta aplicación frontend permite pronosticar si un vuelo llegará a tiempo o te
 - **Selector de Aerolíneas**: Permite seleccionar entre una lista predefinida de aerolíneas (Latam, Avianca, Gol, etc.).
 - **Selectores de Origen y Destino**: Selección de aeropuertos (GRU, GIG, SCL, etc.) con validación para evitar que sean iguales.
 - **Selector de Fecha**: Calendario integrado para elegir la fecha del vuelo.
+- **Selector de Hora**: Selección de hora formato 24h con intervalos de 30 minutos.
 - **Visualización de Estadísticas**: Gráfico de pastel que muestra el porcentaje de puntualidad y retraso.
 - **Cálculo de Retraso Promedio**: Muestra el tiempo estimado de retraso en minutos.
 - **Diseño Responsivo**: Adaptable a diferentes tamaños de pantalla, simulando un entorno de escritorio.

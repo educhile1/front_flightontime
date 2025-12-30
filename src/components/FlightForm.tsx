@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import './FlightForm.css'; // We will create this for custom overrides if needed
 
 interface FlightFormProps {
-    onSearch: (airline: string, origin: string, destination: string, date: string) => void;
+    onSearch: (airline: string, origin: string, destination: string, date: string, time: string) => void;
     isLoading: boolean;
 }
 
@@ -46,16 +46,23 @@ const AEROLINEAS: Aerolinea[] = [
     { id: 5, nombre: 'Gol', nombre_corto: 'Gol' },
 ];
 
+const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
+    const hour = Math.floor(i / 2).toString().padStart(2, '0');
+    const minute = i % 2 === 0 ? '00' : '30';
+    return `${hour}:${minute}`;
+});
+
 export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) => {
     const [airline, setAirline] = useState('Latam');
     const [origin, setOrigin] = useState('GIG');
     const [destination, setDestination] = useState('GRU'); // Default to first logic or GRU
     const [startDate, setStartDate] = useState<Date | null>(new Date('2026-01-01T12:00:00'));
+    const [time, setTime] = useState('00:00');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const formattedDate = startDate ? startDate.toLocaleDateString('es-ES') : '';
-        onSearch(airline, origin, destination, formattedDate);
+        onSearch(airline, origin, destination, formattedDate, time);
     };
 
     return (
@@ -133,6 +140,26 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
                             className="w-full border border-gray-400 p-2 text-sm outline-none focus:border-black transition-colors"
                             wrapperClassName="w-full"
                         />
+                    </div>
+                </div>
+
+                <div className="flex flex-col">
+                    <label className="text-xs font-bold uppercase tracking-wider mb-1 text-gray-700">Hora</label>
+                    <div className="relative">
+                        <select
+                            value={time}
+                            onChange={(e) => setTime(e.target.value)}
+                            className="w-full border border-gray-400 p-2 text-sm outline-none focus:border-black transition-colors appearance-none bg-white"
+                        >
+                            {TIME_OPTIONS.map((t) => (
+                                <option key={t} value={t}>
+                                    {t}
+                                </option>
+                            ))}
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
+                        </div>
                     </div>
                 </div>
 
