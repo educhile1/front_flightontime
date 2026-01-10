@@ -4,7 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import './FlightForm.css'; // We will create this for custom overrides if needed
 
 interface FlightFormProps {
-    onSearch: (airline: string, origin: string, destination: string, date: string, time: string) => void;
+    onSearch: (flightNumber: string, airline: string, origin: string, destination: string, date: string, time: string) => void;
     isLoading: boolean;
 }
 
@@ -53,6 +53,7 @@ const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
 });
 
 export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) => {
+    const [flightNumber, setFlightNumber] = useState('AM123');
     const [airline, setAirline] = useState('Latam');
     const [origin, setOrigin] = useState('GIG');
     const [destination, setDestination] = useState('GRU'); // Default to first logic or GRU
@@ -62,12 +63,24 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const formattedDate = startDate ? startDate.toLocaleDateString('es-ES') : '';
-        onSearch(airline, origin, destination, formattedDate, time);
+        onSearch(flightNumber, airline, origin, destination, formattedDate, time);
     };
 
     return (
         <div className="flex flex-col gap-6 w-full max-w-sm">
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+
+                <div className="flex flex-col">
+                    <label className="text-xs font-bold uppercase tracking-wider mb-1 text-gray-700">Número de Vuelo</label>
+                    <input
+                        type="text"
+                        value={flightNumber}
+                        onChange={(e) => setFlightNumber(e.target.value)}
+                        className="w-full border border-gray-400 p-2 text-sm outline-none focus:border-black transition-colors"
+                        placeholder="Ej: AM123"
+                        required
+                    />
+                </div>
 
                 <div className="flex flex-col">
                     <label className="text-xs font-bold uppercase tracking-wider mb-1 text-gray-700">Aerolinea</label>

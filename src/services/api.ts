@@ -1,4 +1,24 @@
 
+import axios from 'axios';
+
+export interface FlightPredictionRequest {
+    flightNumber: string;
+    airline: string;
+    origin: string;
+    destination: string;
+    departureTime: string;
+}
+
+export interface FlightPredictionResponse {
+    id: string | null;
+    flightNumber: string;
+    airline: string;
+    origin: string;
+    destination: string;
+    departureTime: string;
+    delayProbability: number;
+}
+
 export interface FlightData {
     airline: string;
     onTimePercentage: number;
@@ -6,23 +26,54 @@ export interface FlightData {
     averageDelayMinutes: number;
 }
 
-export const fetchFlightData = async (
+export const fetchFlightPrediction = async (
+    flightNumber: string,
     airline: string,
     origin: string,
     destination: string,
-    date: string
+    departureTime: string
 ): Promise<FlightData> => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+        const requestData: FlightPredictionRequest = {
+            flightNumber,
+            airline,
+            origin,
+            destination,
+            departureTime,
+        };
 
-    console.log(`Fetching data for: ${airline}, ${origin} -> ${destination} on ${date}`);
+        console.log('API Request:', requestData);
 
-    // Mock response based on input (deterministic for testing)
-    // In a real app, this would be an axios.get call
-    return {
-        airline: airline || "Latam",
-        onTimePercentage: 28.6,
-        delayPercentage: 71.4,
-        averageDelayMinutes: 30,
-    };
+        const response = await axios.post<FlightPredictionResponse>(
+            'http://localhost:8080/api/v1/predict',
+            requestData,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+
+        console.log('API Response:', response.data);
+
+        const { delayProbability } = response.data;
+
+        // Convert delay probability to percentages
+        const delayPercentage = Math.round(delayProbability * 100);
+        const onTimePercentage = 100 - delayPercentage;
+
+        // For now, we'll use a mock average delay minutes since the API doesn't provide it
+        // In a real scenario, you might want to adjust this based on the delay probability
+        const averageDelayMinutes = Math.round(delayProbability * 60); // Rough estimate
+
+        return {
+            airline,
+            onTimePercentage,
+            delayPercentage,
+            averageDelayMinutes,
+        };
+    } catch (error) {
+        console.error('Error fetching flight prediction:', error);
+        throw error;
+    }
 };

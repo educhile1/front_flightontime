@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlightForm } from './components/FlightForm';
 import { FlightStats } from './components/FlightStats';
-import { type FlightData } from './services/api';
+import { fetchFlightPrediction, type FlightData } from './services/api';
 
 function App() {
   const [data, setData] = React.useState<FlightData | null>(null);
@@ -15,10 +15,10 @@ function App() {
   // We'll set a default state for the demo if user interactions are needed.
   React.useEffect(() => {
     // Optional: Load default data
-    handleSearch('Latam', 'GIG', 'GRU', '01/01/2026', '12:00');
+    handleSearch('AM123', 'Latam', 'GIG', 'GRU', '01/01/2026', '12:00');
   }, []);
 
-  const handleSearch = async (airline: string, origin: string, destination: string, date: string, time: string) => {
+  const handleSearch = async (flightNumber: string, airline: string, origin: string, destination: string, date: string, time: string) => {
     setIsLoading(true);
     setMessage(null);
     setIsError(false);
@@ -27,31 +27,27 @@ function App() {
       setIsError(true);
       setMessage('No es permitido: El origen y el destino no pueden ser iguales.');
       setIsLoading(false);
-      setData(null); // Optional: clear chart or keep previous? Clearing seems safer for "error"
+      setData(null);
       return;
     }
 
-    setMessage(`Consultando: Vuelo de ${origin} a ${destination} por ${airline} el ${date} a las ${time}`);
+    setMessage(`Consultando: Vuelo ${flightNumber} de ${origin} a ${destination} por ${airline} el ${date} a las ${time}`);
 
-    // Simulate API delay for better UX
-    setTimeout(() => {
-      // Generate two random numbers summing to 100
-      const onTime = Math.floor(Math.random() * 101); // 0 to 100
-      const delay = 100 - onTime;
+    try {
+      // Construct departureTime in ISO format
+      const [day, month, year] = date.split('/');
+      const departureTime = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${time}:00`;
 
-      // Generate random average delay minutes (e.g., 0 to 120 minutes)
-      const avgDelay = Math.floor(Math.random() * 121);
-
-      const newData: FlightData = {
-        airline: airline,
-        onTimePercentage: onTime,
-        delayPercentage: delay,
-        averageDelayMinutes: avgDelay,
-      };
-
-      setData(newData);
+      const flightData = await fetchFlightPrediction(flightNumber, airline, origin, destination, departureTime);
+      setData(flightData);
+    } catch (error) {
+      setIsError(true);
+      setMessage('Error al consultar la predicción del vuelo. Verifica que el servicio esté disponible.');
+      setData(null);
+      console.error('Error fetching flight prediction:', error);
+    } finally {
       setIsLoading(false);
-    }, 500);
+    }
   };
 
   return (
