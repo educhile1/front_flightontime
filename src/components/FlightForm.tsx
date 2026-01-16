@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { getAirlines, type Airline } from '../services/api';
+import { getAirlines, getAirports, type Airline, type Airport } from '../services/api';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import './FlightForm.css'; // Estilos personalizados para el formulario
@@ -12,43 +12,6 @@ interface FlightFormProps {
     // Estado de carga para deshabilitar el botón durante la petición
     isLoading: boolean;
 }
-
-// Interfaz para las opciones de aeropuertos
-interface AirportOption {
-    id: number;
-    nombre: string;
-    nombre_corto: string; // Código IATA
-}
-
-// Interfaz para las opciones de aerolíneas (eliminada, usamos la de api.ts)
-/*
-interface Aerolinea {
-    id: number;
-    nombre: string;
-    nombre_corto: string;
-}
-*/
-
-// Lista de orígenes disponibles
-const ORIGENES: AirportOption[] = [
-    { id: 1, nombre: 'Rio de Janeiro', nombre_corto: 'GIG' },
-    { id: 2, nombre: 'São Paulo', nombre_corto: 'GRU' },
-    { id: 3, nombre: 'Santiago', nombre_corto: 'SCL' },
-    { id: 4, nombre: 'Buenos Aires', nombre_corto: 'EZE' },
-    { id: 5, nombre: 'Miami', nombre_corto: 'MIA' },
-    { id: 6, nombre: 'New York', nombre_corto: 'JFK' },
-];
-
-// Lista de destinos disponibles
-const DESTINOS: AirportOption[] = [
-    { id: 1, nombre: 'São Paulo', nombre_corto: 'GRU' },
-    { id: 2, nombre: 'Rio de Janeiro', nombre_corto: 'GIG' },
-    { id: 3, nombre: 'Santiago', nombre_corto: 'SCL' },
-    { id: 4, nombre: 'Buenos Aires', nombre_corto: 'EZE' },
-    { id: 5, nombre: 'Miami', nombre_corto: 'MIA' },
-    { id: 6, nombre: 'New York', nombre_corto: 'JFK' },
-];
-
 
 // Generar opciones de hora en intervalos de 30 minutos (00:00, 00:30, 01:00...)
 const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
@@ -62,27 +25,44 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
     const [flightNumber, setFlightNumber] = useState('');
     const [airlines, setAirlines] = useState<Airline[]>([]);
     const [airline, setAirline] = useState(''); // Inicialmente vacío hasta cargar
-    const [origin, setOrigin] = useState('GIG');
-    const [destination, setDestination] = useState('GRU');
+    const [airports, setAirports] = useState<Airport[]>([]);
+    const [origin, setOrigin] = useState('');
+    const [destination, setDestination] = useState('');
 
     // Fecha seleccionada (inicializada en una fecha fija para demostración, pero editable)
     const [startDate, setStartDate] = useState<Date | null>(new Date());
     const [time, setTime] = useState('00:00');
 
     useEffect(() => {
-        const fetchAirlines = async () => {
+        const fetchData = async () => {
             try {
-                const data = await getAirlines();
-                setAirlines(data);
-                // Seleccionar la primera aerolínea por defecto si hay datos
-                if (data.length > 0) {
-                    setAirline(data[0].shortName);
+                // Cargar aerolíneas y aeropuertos en paralelo
+                const [airlinesData, airportsData] = await Promise.all([
+                    getAirlines(),
+                    getAirports()
+                ]);
+
+                setAirlines(airlinesData);
+                if (airlinesData.length > 0) {
+                    setAirline(airlinesData[0].shortName);
                 }
+
+                setAirports(airportsData);
+                if (airportsData.length > 0) {
+                    setOrigin(airportsData[0].iata);
+                    // Intentar seleccionar un destino diferente al origen si es posible
+                    if (airportsData.length > 1) {
+                        setDestination(airportsData[1].iata);
+                    } else {
+                        setDestination(airportsData[0].iata);
+                    }
+                }
+
             } catch (error) {
-                console.error("Failed to load airlines", error);
+                console.error("Failed to load initial data", error);
             }
         };
-        fetchAirlines();
+        fetchData();
     }, []);
 
     // Manejador del envío del formulario
@@ -142,9 +122,9 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
                             onChange={(e) => setOrigin(e.target.value)}
                             className="w-full border border-gray-400 p-2 text-sm outline-none focus:border-black transition-colors appearance-none bg-white"
                         >
-                            {ORIGENES.map((opt) => (
-                                <option key={opt.id} value={opt.nombre_corto}>
-                                    {opt.nombre} ({opt.nombre_corto})
+                            {airports.map((airport) => (
+                                <option key={airport.id} value={airport.iata}>
+                                    {airport.city} - {airport.name} ({airport.iata})
                                 </option>
                             ))}
                         </select>
@@ -163,9 +143,9 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
                             onChange={(e) => setDestination(e.target.value)}
                             className="w-full border border-gray-400 p-2 text-sm outline-none focus:border-black transition-colors appearance-none bg-white"
                         >
-                            {DESTINOS.map((dest) => (
-                                <option key={dest.id} value={dest.nombre_corto}>
-                                    {dest.nombre} ({dest.nombre_corto})
+                            {airports.map((airport) => (
+                                <option key={airport.id} value={airport.iata}>
+                                    {airport.city} - {airport.name} ({airport.iata})
                                 </option>
                             ))}
                         </select>

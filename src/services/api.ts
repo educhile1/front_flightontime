@@ -143,3 +143,42 @@ export const getAirlines = async (): Promise<Airline[]> => {
         throw error;
     }
 };
+
+// Interfaz para el aeropuerto
+export interface Airport {
+    id: number;
+    iata: string;
+    name: string;
+    city: string;
+    state: string;
+    latitude: number;
+    longitude: number;
+}
+
+/**
+ * Función para obtener la lista de aeropuertos desde el backend.
+ * Realiza una petición POST al endpoint /api/v1/get-airport.
+ * 
+ * @returns Promesa con la lista de aeropuertos (Airport[])
+ */
+export const getAirports = async (): Promise<Airport[]> => {
+    try {
+        console.log('API Request (Get Airports): {}');
+
+        const response = await axios.post<Airport[]>(
+            'http://localhost:8080/api/v1/get-airport',
+            {},
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+
+        console.log('API Response (Get Airports):', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching airports:', error);
+        throw error;
+    }
+};
