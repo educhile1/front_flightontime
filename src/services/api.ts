@@ -5,9 +5,9 @@ import axios from 'axios';
 // Define los datos requeridos por el endpoint de predicción
 export interface FlightPredictionRequest {
     flightNumber: string; // Número de vuelo (ej: AM123)
-    airline: string;      // Nombre de la aerolínea
-    origin: string;       // Código IATA del aeropuerto de origen
-    destination: string;  // Código IATA del aeropuerto de destino
+    airline: number;      // ID de la aerolínea
+    origin: number;       // ID del aeropuerto de origen
+    destination: number;  // ID del aeropuerto de destino
     departureTime: string;// Fecha y hora de salida en formato ISO
 }
 
@@ -24,7 +24,7 @@ export interface FlightPredictionResponse {
 
 // Interfaz para los datos procesados que utilizará el frontend
 export interface FlightData {
-    airline: string;
+    airline: number;
     onTimePercentage: number;    // Porcentaje de probabilidad de salir a tiempo
     delayPercentage: number;     // Porcentaje de probabilidad de retraso
     averageDelayMinutes: number; // Tiempo estimado de retraso en minutos
@@ -43,9 +43,9 @@ export interface FlightData {
  */
 export const fetchFlightPrediction = async (
     flightNumber: string,
-    airline: string,
-    origin: string,
-    destination: string,
+    airline: number,
+    origin: number,
+    destination: number,
     departureTime: string
 ): Promise<FlightData> => {
     try {

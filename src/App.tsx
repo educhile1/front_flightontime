@@ -25,7 +25,7 @@ function App() {
 
   // Función principal para manejar la búsqueda.
   // Se invoca cuando el usuario presiona "Consultar" en el formulario.
-  const handleSearch = async (flightNumber: string, airline: string, origin: string, destination: string, date: string, time: string) => {
+  const handleSearch = async (flightNumber: string, airline: number, origin: number, destination: number, date: string, time: string) => {
     setIsLoading(true);
     setMessage(null);
     setIsError(false);

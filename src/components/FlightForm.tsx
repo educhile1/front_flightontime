@@ -8,7 +8,7 @@ import './FlightForm.css'; // Estilos personalizados para el formulario
 // Props para el componente FlightForm
 interface FlightFormProps {
     // Función que se ejecuta al enviar el formulario con los datos seleccionados
-    onSearch: (flightNumber: string, airline: string, origin: string, destination: string, date: string, time: string) => void;
+    onSearch: (flightNumber: string, airline: number, origin: number, destination: number, date: string, time: string) => void;
     // Estado de carga para deshabilitar el botón durante la petición
     isLoading: boolean;
 }
@@ -24,10 +24,10 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
     // Estados locales para los campos del formulario
     const [flightNumber, setFlightNumber] = useState('');
     const [airlines, setAirlines] = useState<Airline[]>([]);
-    const [airline, setAirline] = useState(''); // Inicialmente vacío hasta cargar
+    const [airline, setAirline] = useState<number>(0); // ID de aerolínea
     const [airports, setAirports] = useState<Airport[]>([]);
-    const [origin, setOrigin] = useState('');
-    const [destination, setDestination] = useState('');
+    const [origin, setOrigin] = useState<number>(0); // ID de origen
+    const [destination, setDestination] = useState<number>(0); // ID de destino
 
     // Fecha seleccionada (inicializada en una fecha fija para demostración, pero editable)
     const [startDate, setStartDate] = useState<Date | null>(new Date());
@@ -44,17 +44,17 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
 
                 setAirlines(airlinesData);
                 if (airlinesData.length > 0) {
-                    setAirline(airlinesData[0].shortName);
+                    setAirline(airlinesData[0].id);
                 }
 
                 setAirports(airportsData);
                 if (airportsData.length > 0) {
-                    setOrigin(airportsData[0].iata);
+                    setOrigin(airportsData[0].id);
                     // Intentar seleccionar un destino diferente al origen si es posible
                     if (airportsData.length > 1) {
-                        setDestination(airportsData[1].iata);
+                        setDestination(airportsData[1].id);
                     } else {
-                        setDestination(airportsData[0].iata);
+                        setDestination(airportsData[0].id);
                     }
                 }
 
@@ -97,11 +97,11 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
                     <div className="relative">
                         <select
                             value={airline}
-                            onChange={(e) => setAirline(e.target.value)}
+                            onChange={(e) => setAirline(Number(e.target.value))}
                             className="w-full border border-gray-400 p-2 text-sm outline-none focus:border-black transition-colors appearance-none bg-white"
                         >
                             {airlines.map((aero) => (
-                                <option key={aero.id} value={aero.shortName}>
+                                <option key={aero.id} value={aero.id}>
                                     {aero.fullName} ({aero.shortName})
                                 </option>
                             ))}
@@ -119,11 +119,11 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
                     <div className="relative">
                         <select
                             value={origin}
-                            onChange={(e) => setOrigin(e.target.value)}
+                            onChange={(e) => setOrigin(Number(e.target.value))}
                             className="w-full border border-gray-400 p-2 text-sm outline-none focus:border-black transition-colors appearance-none bg-white"
                         >
                             {airports.map((airport) => (
-                                <option key={airport.id} value={airport.iata}>
+                                <option key={airport.id} value={airport.id}>
                                     {airport.city} - {airport.name} ({airport.iata})
                                 </option>
                             ))}
@@ -140,11 +140,11 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
                     <div className="relative">
                         <select
                             value={destination}
-                            onChange={(e) => setDestination(e.target.value)}
+                            onChange={(e) => setDestination(Number(e.target.value))}
                             className="w-full border border-gray-400 p-2 text-sm outline-none focus:border-black transition-colors appearance-none bg-white"
                         >
                             {airports.map((airport) => (
-                                <option key={airport.id} value={airport.iata}>
+                                <option key={airport.id} value={airport.id}>
                                     {airport.city} - {airport.name} ({airport.iata})
                                 </option>
                             ))}
