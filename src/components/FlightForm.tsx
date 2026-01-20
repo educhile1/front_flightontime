@@ -1,16 +1,25 @@
 
 import React, { useState, useEffect } from 'react';
-import { getAirlines, getAirports, type Airline, type Airport } from '../services/api';
+import { getAirports, type Airline, type Airport } from '../services/api';
+
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import './FlightForm.css'; // Estilos personalizados para el formulario
 
 // Props para el componente FlightForm
+// Props para el componente FlightForm
 interface FlightFormProps {
     // Función que se ejecuta al enviar el formulario con los datos seleccionados
     onSearch: (flightNumber: string, airline: number, origin: number, destination: number, date: string, time: string) => void;
+    // Callbacks para notificar cambios en la selección de aeropuertos (para el mapa)
+    onOriginChange?: (airport: Airport | null) => void;
+    onDestinationChange?: (airport: Airport | null) => void;
     // Estado de carga para deshabilitar el botón durante la petición
     isLoading: boolean;
+    // Props para manejo de aerolíneas (Lifted State)
+    airlines: Airline[];
+    selectedAirline: number;
+    onAirlineChange: (airlineId: number) => void;
 }
 
 // Generar opciones de hora en intervalos de 30 minutos (00:00, 00:30, 01:00...)
@@ -20,11 +29,19 @@ const TIME_OPTIONS = Array.from({ length: 48 }, (_, i) => {
     return `${hour}:${minute}`;
 });
 
-export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) => {
+export const FlightForm: React.FC<FlightFormProps> = ({
+    onSearch,
+    onOriginChange,
+    onDestinationChange,
+    isLoading,
+    airlines,
+    selectedAirline,
+    onAirlineChange
+}) => {
     // Estados locales para los campos del formulario
     const [flightNumber, setFlightNumber] = useState('');
-    const [airlines, setAirlines] = useState<Airline[]>([]);
-    const [airline, setAirline] = useState<number>(0); // ID de aerolínea
+    // const [airlines, setAirlines] = useState<Airline[]>([]); // Eliminado: viene por props
+    // const [airline, setAirline] = useState<number>(0); // Eliminado: viene por props
     const [airports, setAirports] = useState<Airport[]>([]);
     const [origin, setOrigin] = useState<number>(0); // ID de origen
     const [destination, setDestination] = useState<number>(0); // ID de destino
@@ -33,29 +50,38 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
     const [startDate, setStartDate] = useState<Date | null>(new Date());
     const [time, setTime] = useState('00:00');
 
+    // Helper para obtener datos del aeropuerto seleccionado
+    const getSelectedAirport = (id: number) => airports.find(a => a.id === id) || null;
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // Cargar aerolíneas y aeropuertos en paralelo
-                const [airlinesData, airportsData] = await Promise.all([
-                    getAirlines(),
-                    getAirports()
-                ]);
+                // const [airlinesData, airportsData] = await Promise.all([
+                //     getAirlines(),
+                //     getAirports()
+                // ]);
+                // Solo cargamos aeropuertos aquí, las aerolíneas vienen del padre
+                const airportsData = await getAirports();
 
-                setAirlines(airlinesData);
-                if (airlinesData.length > 0) {
-                    setAirline(airlinesData[0].id);
-                }
+                // setAirlines(airlinesData); // Manejado por el padre
+                // if (airlinesData.length > 0) {
+                //     setAirline(airlinesData[0].id);
+                // }
 
                 setAirports(airportsData);
                 if (airportsData.length > 0) {
-                    setOrigin(airportsData[0].id);
-                    // Intentar seleccionar un destino diferente al origen si es posible
+                    // Selección inicial inteligente
+                    const firstId = airportsData[0].id;
+                    setOrigin(firstId);
+                    if (onOriginChange) onOriginChange(airportsData[0]);
+
+                    let secondId = firstId;
                     if (airportsData.length > 1) {
-                        setDestination(airportsData[1].id);
-                    } else {
-                        setDestination(airportsData[0].id);
+                        secondId = airportsData[1].id;
                     }
+                    setDestination(secondId);
+                    if (onDestinationChange) onDestinationChange(airportsData.find(a => a.id === secondId) || null);
                 }
 
             } catch (error) {
@@ -71,7 +97,20 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
         // Formatear la fecha a string simple
         const formattedDate = startDate ? startDate.toLocaleDateString('es-ES') : '';
         // Llamar a la función del padre para iniciar la búsqueda
-        onSearch(flightNumber, airline, origin, destination, formattedDate, time);
+        onSearch(flightNumber, selectedAirline, origin, destination, formattedDate, time);
+    };
+
+    // Handlers para cambios en selects
+    const handleOriginChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const id = Number(e.target.value);
+        setOrigin(id);
+        if (onOriginChange) onOriginChange(getSelectedAirport(id));
+    };
+
+    const handleDestinationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const id = Number(e.target.value);
+        setDestination(id);
+        if (onDestinationChange) onDestinationChange(getSelectedAirport(id));
     };
 
     return (
@@ -96,8 +135,8 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
                     <label className="text-xs font-bold uppercase tracking-wider mb-1 text-gray-700">Aerolinea</label>
                     <div className="relative">
                         <select
-                            value={airline}
-                            onChange={(e) => setAirline(Number(e.target.value))}
+                            value={selectedAirline}
+                            onChange={(e) => onAirlineChange(Number(e.target.value))}
                             className="w-full border border-gray-400 p-2 text-sm outline-none focus:border-black transition-colors appearance-none bg-white"
                         >
                             {airlines.map((aero) => (
@@ -119,7 +158,7 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
                     <div className="relative">
                         <select
                             value={origin}
-                            onChange={(e) => setOrigin(Number(e.target.value))}
+                            onChange={handleOriginChange}
                             className="w-full border border-gray-400 p-2 text-sm outline-none focus:border-black transition-colors appearance-none bg-white"
                         >
                             {airports.map((airport) => (
@@ -132,6 +171,12 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
                             <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
                         </div>
                     </div>
+                    {/* Coordenadas Origen */}
+                    {origin !== 0 && (
+                        <div className="text-xs text-gray-500 mt-1">
+                            Lat: {getSelectedAirport(origin)?.latitude}, Lon: {getSelectedAirport(origin)?.longitude}
+                        </div>
+                    )}
                 </div>
 
                 {/* Campo: Destino */}
@@ -140,7 +185,7 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
                     <div className="relative">
                         <select
                             value={destination}
-                            onChange={(e) => setDestination(Number(e.target.value))}
+                            onChange={handleDestinationChange}
                             className="w-full border border-gray-400 p-2 text-sm outline-none focus:border-black transition-colors appearance-none bg-white"
                         >
                             {airports.map((airport) => (
@@ -153,6 +198,12 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
                             <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
                         </div>
                     </div>
+                    {/* Coordenadas Destino */}
+                    {destination !== 0 && (
+                        <div className="text-xs text-gray-500 mt-1">
+                            Lat: {getSelectedAirport(destination)?.latitude}, Lon: {getSelectedAirport(destination)?.longitude}
+                        </div>
+                    )}
                 </div>
 
                 {/* Campo: Fecha con DatePicker */}
@@ -206,3 +257,4 @@ export const FlightForm: React.FC<FlightFormProps> = ({ onSearch, isLoading }) =
         </div>
     );
 };
+

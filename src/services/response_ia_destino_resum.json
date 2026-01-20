@@ -1,0 +1,199 @@
+{
+    "destino": {
+        "aeropuerto": "John F. Kennedy International Airport (JFK)",
+        "ciudad": "Nueva York",
+        "pais": "Estados Unidos",
+        "info_pais": {
+            "idioma": "Inglés",
+            "moneda_codigo": "USD",
+            "tasa_propina_sugerida": "15-20% en restaurantes, 10-15% en taxis, $1-2 por maleta para porteros",
+            "e_sim_recomendada_url": "https://www.google.com/search?q=eSIM+para+viajar+a+Estados+Unidos"
+        },
+        "tecnico": {
+            "enchufes": [
+                "Tipo A",
+                "Tipo B"
+            ],
+            "voltaje": "120V",
+            "frecuencia": "60Hz"
+        },
+        "emergencias": {
+            "numero_unico": "911",
+            "policia": "911",
+            "ambulancia": "911"
+        }
+    },
+    "analisis_climatico_historico": {
+        "resumen": "Mediados de octubre en Nueva York marca el pleno otoño. El clima es generalmente fresco y agradable, con mañanas y noches más frías. Es una época hermosa con el follaje cambiando de color, ideal para explorar la ciudad a pie.",
+        "temp_rango": "Mínima: 7-12°C (45-54°F), Máxima: 15-20°C (59-68°F)",
+        "riesgos_meteorologicos": "Bajas probabilidades de tormentas tropicales o huracanes (fin de temporada). Posibilidad de lluvias ocasionales y vientos frescos. La temperatura puede descender rápidamente al anochecer.",
+        "maleta_inteligente": [
+            {
+                "prenda": "Chaqueta ligera/Rompevientos",
+                "prioridad": "Alta",
+                "link_google_search": "https://www.google.com/search?q=chaqueta+ligera+rompevientos+hombre"
+            },
+            {
+                "prenda": "Suéteres/Cardigans",
+                "prioridad": "Alta",
+                "link_google_search": "https://www.google.com/search?q=sueteres+cardigans+lana+oto%C3%B1o"
+            },
+            {
+                "prenda": "Pantalones largos cómodos (jeans, chinos)",
+                "prioridad": "Alta",
+                "link_google_search": "https://www.google.com/search?q=pantalones+largos+comodos+viaje"
+            },
+            {
+                "prenda": "Bufanda y guantes ligeros",
+                "prioridad": "Media",
+                "link_google_search": "https://www.google.com/search?q=bufanda+guantes+ligeros+oto%C3%B1o"
+            },
+            {
+                "prenda": "Calzado cómodo para caminar (impermeable si es posible)",
+                "prioridad": "Alta",
+                "link_google_search": "https://www.google.com/search?q=calzado+comodo+caminar+impermeable+ciudad"
+            },
+            {
+                "prenda": "Camisetas de manga larga y corta (capas)",
+                "prioridad": "Alta",
+                "link_google_search": "https://www.google.com/search?q=camisetas+manga+larga+corta+algodon"
+            }
+        ]
+    },
+    "logistica_transporte_aeropuerto": [
+        {
+            "medio": "AirTrain JFK + Metro (Subway)",
+            "costo_estimado_usd": 8.50,
+            "tiempo_minutos": 60,
+            "horario_recomendado": "24/7 (Metro puede tener horarios reducidos en la noche)",
+            "metodo_pago": "MetroCard (recargable), OMNY (tarjeta sin contacto/móvil)"
+        },
+        {
+            "medio": "Taxi Amarillo (Yellow Cab)",
+            "costo_estimado_usd": 70.00,
+            "tiempo_minutos": 45,
+            "horario_recomendado": "24/7",
+            "metodo_pago": "Efectivo, Tarjeta de crédito/débito"
+        },
+        {
+            "medio": "Ride-sharing (Uber/Lyft)",
+            "costo_estimado_usd": 60.00,
+            "tiempo_minutos": 45,
+            "horario_recomendado": "24/7",
+            "metodo_pago": "App (tarjeta vinculada)"
+        }
+    ],
+    "puntos_interes_georreferenciados": [
+        {
+            "nombre": "Aeropuerto Internacional JFK",
+            "tipo": "aeropuerto",
+            "coordenadas": {
+                "lat": 40.6413,
+                "lng": -73.7781
+            },
+            "color_hex": "#000000",
+            "navegacion": {
+                "gmaps_nav": "https://www.google.com/maps/dir/?api=1&destination=40.6413,-73.7781&travelmode=driving",
+                "waze_nav": "https://waze.com/ul?ll=40.6413,-73.7781&navigate=yes"
+            },
+            "comentario_experto": "Principal puerta de entrada a Nueva York. Considera el AirTrain y el metro para evitar el tráfico de la ciudad, especialmente en horas punta."
+        },
+        {
+            "nombre": "Grand Central Terminal",
+            "tipo": "transporte",
+            "coordenadas": {
+                "lat": 40.7527,
+                "lng": -73.9772
+            },
+            "color_hex": "#0000FF",
+            "navegacion": {
+                "gmaps_nav": "https://www.google.com/maps/dir/?api=1&destination=40.7527,-73.9772&travelmode=driving",
+                "waze_nav": "https://waze.com/ul?ll=40.7527,-73.9772&navigate=yes"
+            },
+            "comentario_experto": "Un nodo central de transporte público y una joya arquitectónica. Conecta varias líneas de metro y es un buen punto de partida para explorar Midtown."
+        },
+        {
+            "nombre": "The Plaza Hotel",
+            "tipo": "hotel_centro",
+            "coordenadas": {
+                "lat": 40.7646,
+                "lng": -73.9744
+            },
+            "color_hex": "#008000",
+            "navegacion": {
+                "gmaps_nav": "https://www.google.com/maps/dir/?api=1&destination=40.7646,-73.9744&travelmode=driving",
+                "waze_nav": "https://waze.com/ul?ll=40.7646,-73.9744&navigate=yes"
+            },
+            "comentario_experto": "Un hotel icónico con vistas a Central Park. Representa el lujo clásico de Nueva York y está estratégicamente ubicado para el turismo y compras de alto nivel."
+        },
+        {
+            "nombre": "TWA Hotel (JFK Airport)",
+            "tipo": "hotel_aeropuerto",
+            "coordenadas": {
+                "lat": 40.6441,
+                "lng": -73.7845
+            },
+            "color_hex": "#FFA500",
+            "navegacion": {
+                "gmaps_nav": "https://www.google.com/maps/dir/?api=1&destination=40.6441,-73.7845&travelmode=driving",
+                "waze_nav": "https://waze.com/ul?ll=40.6441,-73.7845&navigate=yes"
+            },
+            "comentario_experto": "Un hotel retro único ubicado directamente en el aeropuerto JFK, ideal para escalas o llegadas nocturnas. Su diseño de los años 60 es una atracción en sí mismo."
+        },
+        {
+            "nombre": "Empire State Building",
+            "tipo": "turismo",
+            "coordenadas": {
+                "lat": 40.7488,
+                "lng": -73.9857
+            },
+            "color_hex": "#FF0000",
+            "navegacion": {
+                "gmaps_nav": "https://www.google.com/maps/dir/?api=1&destination=40.7488,-73.9857&travelmode=driving",
+                "waze_nav": "https://waze.com/ul?ll=40.7488,-73.9857&navigate=yes"
+            },
+            "comentario_experto": "Un hito indiscutible de Nueva York. Las vistas desde la cima son espectaculares, especialmente al atardecer. Compra las entradas con antelación para evitar largas colas."
+        },
+        {
+            "nombre": "Katz's Delicatessen",
+            "tipo": "comida",
+            "coordenadas": {
+                "lat": 40.7223,
+                "lng": -73.9876
+            },
+            "color_hex": "#8B4513",
+            "navegacion": {
+                "gmaps_nav": "https://www.google.com/maps/dir/?api=1&destination=40.7223,-73.9876&travelmode=driving",
+                "waze_nav": "https://waze.com/ul?ll=40.7223,-73.9876&navigate=yes"
+            },
+            "comentario_experto": "Un clásico de Nueva York famoso por sus sándwiches de pastrami y carne en conserva. La experiencia es tan parte de la visita como la comida. Prepararse para compartir mesa y el ambiente bullicioso."
+        }
+    ],
+    "gastronomia_estacional": {
+        "platos_sugeridos_fecha": [
+            "New York-style Pizza",
+            "Bagels con 'schmear' (queso crema)",
+            "Pastrami on Rye (Katz's)",
+            "Cheesecake de Nueva York",
+            "Hamburguesas gourmet",
+            "Sopa de calabaza (de temporada)",
+            "Sidra de manzana caliente o fría (de temporada)"
+        ],
+        "bebida_tipica": "Cerveza artesanal local, cócteles clásicos (Manhattan, Old Fashioned), café de especialidad",
+        "precio_medio_menu_usd": 25.00
+    },
+    "inteligencia_seguridad": {
+        "nivel_riesgo": "Medio-Bajo",
+        "zonas_no_go": [
+            "Evitar Central Park y otras áreas poco iluminadas o aisladas de parques después del anochecer.",
+            "Ciertas áreas del Bronx o Brooklyn pueden requerir más precaución si no se está familiarizado."
+        ],
+        "estafas_comunes_activas": [
+            "Personas pidiendo dinero agresivamente o con historias elaboradas.",
+            "Vendedores ambulantes de entradas para espectáculos o atracciones turísticas (riesgo de falsificación).",
+            "Personajes disfrazados en Times Square que exigen propinas excesivas por fotos.",
+            "Taxis no regulados que ofrecen tarifas fijas sin taxímetro."
+        ],
+        "frase_auxilio_local": "Help!"
+    }
+}

@@ -4,11 +4,17 @@ import axios from 'axios';
 // Interfaz para la solicitud de predicción de vuelo
 // Define los datos requeridos por el endpoint de predicción
 export interface FlightPredictionRequest {
-    flightNumber: string; // Número de vuelo (ej: AM123)
-    airline: number;      // ID de la aerolínea
-    origin: number;       // ID del aeropuerto de origen
-    destination: number;  // ID del aeropuerto de destino
-    departureTime: string;// Fecha y hora de salida en formato ISO
+    flight: {
+        flightNumber: string;
+        airline: number;
+        origin: number;
+        destination: number;
+        departureTime: string;
+    };
+    dayOfWeek: number;
+    hour: number;
+    minute: number;
+    month: number;
 }
 
 // Interfaz para la respuesta recibida del servidor de predicción
@@ -32,7 +38,7 @@ export interface FlightData {
 
 /**
  * Función para obtener la predicción de vuelo desde el backend.
- * Realiza una petición POST al endpoint /api/v1/predict.
+ * Realiza una petición POST al endpoint /api/v1/predict-smart.
  * 
  * @param flightNumber Número de vuelo
  * @param airline Aerolínea
@@ -49,19 +55,32 @@ export const fetchFlightPrediction = async (
     departureTime: string
 ): Promise<FlightData> => {
     try {
+        const date = new Date(departureTime);
+
+        // Mapeo de día de la semana: JS getDay() es 0 (Dom) - 6 (Sab).
+        // Ajustamos a 1 (Lun) - 7 (Dom) para compatibilidad estándar ISO/Java.
+        let dayOfWeek = date.getDay();
+        if (dayOfWeek === 0) dayOfWeek = 7;
+
         const requestData: FlightPredictionRequest = {
-            flightNumber,
-            airline,
-            origin,
-            destination,
-            departureTime,
+            flight: {
+                flightNumber,
+                airline,
+                origin,
+                destination,
+                departureTime,
+            },
+            dayOfWeek: dayOfWeek,
+            hour: date.getHours(),
+            minute: date.getMinutes(),
+            month: date.getMonth() + 1 // JS meses son 0-11, API espera 1-12
         };
 
         console.log('API Request (Predicción de Vuelo):', requestData);
 
         // Llamada al servicio backend
         const response = await axios.post<FlightPredictionResponse>(
-            'http://localhost:8080/api/v1/predict',
+            'http://localhost:8080/api/v1/predict-smart',
             requestData,
             {
                 headers: {
@@ -182,3 +201,163 @@ export const getAirports = async (): Promise<Airport[]> => {
         throw error;
     }
 };
+
+// Interfaz para la respuesta del dashboard de retrasos por mes
+export interface DelaysByMonthResponse {
+    periodo: string;
+    totalVuelos: number;
+    totalRetrasos: number;
+}
+
+/**
+ * Función para obtener las estadísticas de retrasos por mes.
+ * Realiza una petición GET al endpoint /api/v1/dashboard/delays-by-month.
+ * 
+ * @param opUniqueCarrier ID de la aerolínea (por defecto 2 según requerimiento)
+ * @returns Promesa con la lista de estadísticas mensuales
+ */
+export const getDelaysByMonth = async (opUniqueCarrier: number = 2): Promise<DelaysByMonthResponse[]> => {
+    try {
+        console.log(`API Request (Dashboard Delays): opUniqueCarrier=${opUniqueCarrier}`);
+
+        const response = await axios.get<DelaysByMonthResponse[]>(
+            `http://localhost:8080/api/v1/dashboard/delays-by-month?opUniqueCarrier=${opUniqueCarrier}`
+        );
+
+        console.log('API Response (Dashboard Delays):', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching dashboard delays:', error);
+        throw error;
+    }
+};
+
+
+// ==========================================
+// TRAVEL GUIDE SERVICE INTERFACES
+// ==========================================
+
+export interface TravelGuideRequest {
+    latitude: string;
+    longitude: string;
+    travelDate: string; // Format: DD-MM
+}
+
+export interface InfoPais {
+    idioma: string;
+    moneda_codigo: string;
+    tasa_propina_sugerida: string;
+    e_sim_recomendada_url: string;
+}
+
+export interface TecnicoInfo {
+    enchufes: string[];
+    voltaje: string;
+    frecuencia: string;
+}
+
+export interface EmergenciasInfo {
+    numero_unico: string;
+    policia: string;
+    ambulancia: string;
+}
+
+export interface DestinoInfo {
+    aeropuerto: string;
+    ciudad: string;
+    pais: string;
+    info_pais: InfoPais;
+    tecnico: TecnicoInfo;
+    emergencias: EmergenciasInfo;
+}
+
+export interface MaletaItem {
+    prenda: string;
+    prioridad: string;
+    link_google_search: string;
+}
+
+export interface AnalisisClimatico {
+    resumen: string;
+    temp_rango: string;
+    riesgos_meteorologicos: string;
+    maleta_inteligente: MaletaItem[];
+}
+
+export interface TransporteOption {
+    medio: string;
+    costo_estimado_usd: number;
+    tiempo_minutos: number;
+    horario_recomendado: string;
+    metodo_pago: string;
+}
+
+export interface Coordenadas {
+    lat: number;
+    lng: number;
+}
+
+export interface NavegacionLinks {
+    gmaps_nav: string;
+    waze_nav: string;
+}
+
+export interface PuntoInteres {
+    nombre: string;
+    tipo: string;
+    coordenadas: Coordenadas;
+    color_hex: string;
+    navegacion: NavegacionLinks;
+    comentario_experto: string;
+}
+
+export interface GastronomiaInfo {
+    platos_sugeridos_fecha: string[];
+    bebida_tipica: string;
+    precio_medio_menu_usd: number;
+}
+
+export interface InteligenciaSeguridad {
+    nivel_riesgo: string;
+    zonas_no_go: string[];
+    estafas_comunes_activas: string[];
+    frase_auxilio_local: string;
+}
+
+export interface TravelGuideResponse {
+    destino: DestinoInfo;
+    analisis_climatico_historico: AnalisisClimatico;
+    logistica_transporte_aeropuerto: TransporteOption[];
+    puntos_interes_georreferenciados: PuntoInteres[];
+    gastronomia_estacional: GastronomiaInfo;
+    inteligencia_seguridad: InteligenciaSeguridad;
+}
+
+/**
+ * Servicio para obtener la Guía de Viaje Inteligente.
+ * POST /api/v1/travel-guide
+ */
+export const fetchTravelGuide = async (latitude: string, longitude: string, travelDate: string): Promise<TravelGuideResponse> => {
+    try {
+        const requestData: TravelGuideRequest = {
+            latitude,
+            longitude,
+            travelDate // Espera formato DD-MM
+        };
+
+        console.log('API Request (Travel Guide):', requestData);
+
+        const response = await axios.post<TravelGuideResponse>(
+            'http://localhost:8080/api/v1/travel-guide',
+            requestData
+        );
+
+        console.log('API Response (Travel Guide):', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching travel guide:', error);
+        throw error;
+    }
+};
+
+
