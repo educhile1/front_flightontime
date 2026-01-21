@@ -360,4 +360,40 @@ export const fetchTravelGuide = async (latitude: string, longitude: string, trav
     }
 };
 
+/**
+ * Interfaz para los retrasos en ruta
+ */
+export interface RouteDelay {
+    origen_destino: string;
+    mes: number;
+    aerolinea: string;
+    tiempo: number;
+}
+
+/**
+ * Función para obtener los retrasos históricos por ruta.
+ * GET /api/v1/delays/route?origin={origin}&destination={destination}
+ */
+export const fetchRouteDelays = async (origin: number, destination: number): Promise<RouteDelay[]> => {
+    try {
+        console.log(`API Request (Route Delays): origin=${origin}, destination=${destination}`);
+
+        const response = await axios.get<RouteDelay[]>(
+            `http://localhost:8080/api/v1/delays/route`,
+            {
+                params: {
+                    origin,
+                    destination
+                }
+            }
+        );
+
+        console.log('API Response (Route Delays):', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching route delays:', error);
+        throw error;
+    }
+};
+
 

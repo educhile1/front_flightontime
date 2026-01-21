@@ -8,6 +8,7 @@ import axios from 'axios';
 
 import { DashboardChart } from './components/DashboardChart';
 import { TravelGuide } from './components/TravelGuide';
+import { RouteDelayChart } from './components/RouteDelayChart';
 import { BarChart3, Plane, Map } from 'lucide-react';
 
 function App() {
@@ -253,6 +254,13 @@ function App() {
                 <div className="w-full h-80 lg:h-96 shrink-0">
                   <FlightMap origin={selectedOrigin} destination={selectedDestination} />
                 </div>
+
+                {/* Gráfico de Comparativa de Ruta */}
+                <RouteDelayChart
+                  originId={selectedOrigin?.id || null}
+                  destinationId={selectedDestination?.id || null}
+                  airlines={airlines}
+                />
 
                 {/* Estadísticas (se muestran solo cuando hay datos) */}
                 {data && (
