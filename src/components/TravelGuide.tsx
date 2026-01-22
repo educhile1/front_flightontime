@@ -17,6 +17,7 @@ import {
     CheckCircle
 } from 'lucide-react';
 import type { TravelGuideResponse } from '../services/api';
+import { TravelGuideMap } from './TravelGuideMap';
 
 interface TravelGuideProps {
     data: TravelGuideResponse;
@@ -252,6 +253,11 @@ export const TravelGuide: React.FC<TravelGuideProps> = ({ data }) => {
                                 <Camera size={24} />
                             </div>
                             <h2 className="text-xl font-bold text-gray-800">Turismo Express</h2>
+                        </div>
+
+                        {/* Mapa de Puntos de Interés */}
+                        <div className="mb-6">
+                            <TravelGuideMap points={puntos_interes_georreferenciados} />
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
