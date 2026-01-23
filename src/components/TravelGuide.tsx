@@ -33,7 +33,7 @@ export const TravelGuide: React.FC<TravelGuideProps> = ({ data }) => {
         inteligencia_seguridad
     } = data;
 
-    const [activeTab, setActiveTab] = React.useState<'guide' | 'shop'>('guide');
+    const [activeTab, setActiveTab] = React.useState<'guide' | 'tourism' | 'shop'>('guide');
     const [shopItems, setShopItems] = React.useState<{ name: string; price: number; selected: boolean }[]>([]);
     const [paymentStep, setPaymentStep] = React.useState<'form' | 'processing' | 'success'>('form');
 
@@ -115,6 +115,12 @@ export const TravelGuide: React.FC<TravelGuideProps> = ({ data }) => {
                     Guía de Viaje
                 </button>
                 <button
+                    onClick={() => setActiveTab('tourism')}
+                    className={`pb-2 px-4 font-bold text-sm transition-colors ${activeTab === 'tourism' ? 'text-teal-600 border-b-2 border-teal-600' : 'text-gray-500 hover:text-gray-700'}`}
+                >
+                    Turismo Express
+                </button>
+                <button
                     onClick={() => setActiveTab('shop')}
                     className={`pb-2 px-4 font-bold text-sm transition-colors ${activeTab === 'shop' ? 'text-purple-600 border-b-2 border-purple-600' : 'text-gray-500 hover:text-gray-700'}`}
                 >
@@ -122,7 +128,7 @@ export const TravelGuide: React.FC<TravelGuideProps> = ({ data }) => {
                 </button>
             </div>
 
-            {activeTab === 'guide' ? (
+            {activeTab === 'guide' && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
 
                     {/* --- CLIMA --- */}
@@ -246,10 +252,25 @@ export const TravelGuide: React.FC<TravelGuideProps> = ({ data }) => {
                         </div>
                     </div>
 
-                    {/* --- PUNTOS DE INTERÉS --- */}
-                    <div className="bg-white rounded-2xl p-6 shadow-sm border border-purple-100 lg:col-span-2">
+
+
+                    {/* --- DISCLAIMER (For Guide) --- */}
+                    <div className="lg:col-span-2 mt-4 text-center">
+                        <p className="text-xs text-gray-400 italic">
+                            * Los precios mostrados son aproximados y pueden variar. Se muestran en moneda local del lugar hacia donde se hace referencia.
+                        </p>
+                    </div>
+
+                </div>
+
+            )
+            }
+
+            {
+                activeTab === 'tourism' && (
+                    <div className="animate-fade-in bg-white rounded-2xl p-6 shadow-sm border border-teal-100 min-h-[500px]">
                         <div className="flex items-center gap-2 mb-4">
-                            <div className="bg-purple-100 p-2 rounded-lg text-purple-600">
+                            <div className="bg-teal-100 p-2 rounded-lg text-teal-600">
                                 <Camera size={24} />
                             </div>
                             <h2 className="text-xl font-bold text-gray-800">Turismo Express</h2>
@@ -279,110 +300,106 @@ export const TravelGuide: React.FC<TravelGuideProps> = ({ data }) => {
                             ))}
                         </div>
                     </div>
+                )
+            }
 
-                    {/* --- DISCLAIMER (For Guide) --- */}
-                    <div className="lg:col-span-2 mt-4 text-center">
-                        <p className="text-xs text-gray-400 italic">
-                            * Los precios mostrados son aproximados y pueden variar. Se muestran en moneda local del lugar hacia donde se hace referencia.
-                        </p>
-                    </div>
-
-                </div>
-            ) : (
-                <div className="animate-fade-in bg-white p-6 rounded-2xl shadow-sm border border-purple-100 items-start">
-                    <div className="flex items-center gap-2 mb-6">
-                        <div className="bg-purple-100 p-2 rounded-lg text-purple-600">
-                            <Wallet size={24} />
+            {
+                activeTab === 'shop' && (
+                    <div className="animate-fade-in bg-white p-6 rounded-2xl shadow-sm border border-purple-100 items-start">
+                        <div className="flex items-center gap-2 mb-6">
+                            <div className="bg-purple-100 p-2 rounded-lg text-purple-600">
+                                <Wallet size={24} />
+                            </div>
+                            <h2 className="text-xl font-bold text-gray-800">Tienda Maleta Inteligente</h2>
                         </div>
-                        <h2 className="text-xl font-bold text-gray-800">Tienda Maleta Inteligente</h2>
-                    </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* Lista de Productos */}
-                        <div className="lg:col-span-2 space-y-4">
-                            <h3 className="font-bold text-gray-700 mb-2">Productos Recomendados para tu Viaje</h3>
-                            {shopItems.map((item, idx) => (
-                                <div key={idx} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${item.selected ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-purple-300'}`} onClick={() => toggleItemSelection(idx)}>
-                                    <div className="flex items-center gap-3">
-                                        <input
-                                            type="checkbox"
-                                            checked={item.selected}
-                                            onChange={() => { }} // Manejado por el div padre
-                                            className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500"
-                                        />
-                                        <div>
-                                            <p className="font-bold text-gray-800">{item.name}</p>
-                                            <p className="text-xs text-gray-500">Esencial para este clima</p>
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            {/* Lista de Productos */}
+                            <div className="lg:col-span-2 space-y-4">
+                                <h3 className="font-bold text-gray-700 mb-2">Productos Recomendados para tu Viaje</h3>
+                                {shopItems.map((item, idx) => (
+                                    <div key={idx} className={`flex items-center justify-between p-4 rounded-xl border transition-all cursor-pointer ${item.selected ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-purple-300'}`} onClick={() => toggleItemSelection(idx)}>
+                                        <div className="flex items-center gap-3">
+                                            <input
+                                                type="checkbox"
+                                                checked={item.selected}
+                                                onChange={() => { }} // Manejado por el div padre
+                                                className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500"
+                                            />
+                                            <div>
+                                                <p className="font-bold text-gray-800">{item.name}</p>
+                                                <p className="text-xs text-gray-500">Esencial para este clima</p>
+                                            </div>
                                         </div>
+                                        <span className="font-bold text-purple-700">${item.price.toFixed(2)}</span>
                                     </div>
-                                    <span className="font-bold text-purple-700">${item.price.toFixed(2)}</span>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Checkout */}
-                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 h-fit sticky top-4">
-                            <h3 className="text-lg font-bold text-gray-800 mb-4">Resumen de Compra</h3>
-
-                            <div className="flex justify-between items-center mb-6 text-xl font-bold text-gray-900 border-b pb-4">
-                                <span>Total:</span>
-                                <span>${calculateTotal()}</span>
+                                ))}
                             </div>
 
-                            {paymentStep === 'form' && (
-                                <form onSubmit={handlePayment} className="space-y-4">
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Número de Tarjeta</label>
-                                        <input type="text" placeholder="0000 0000 0000 0000" required className="w-full p-2 border border-gray-300 rounded focus:border-purple-500 focus:outline-none" />
-                                    </div>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Expiración</label>
-                                            <input type="text" placeholder="MM/YY" required className="w-full p-2 border border-gray-300 rounded focus:border-purple-500 focus:outline-none" />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">CVV</label>
-                                            <input type="text" placeholder="123" required className="w-full p-2 border border-gray-300 rounded focus:border-purple-500 focus:outline-none" />
-                                        </div>
-                                    </div>
-                                    <button
-                                        type="submit"
-                                        disabled={Number(calculateTotal()) === 0}
-                                        className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-4"
-                                    >
-                                        Pagar Ahora
-                                    </button>
-                                </form>
-                            )}
+                            {/* Checkout */}
+                            <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 h-fit sticky top-4">
+                                <h3 className="text-lg font-bold text-gray-800 mb-4">Resumen de Compra</h3>
 
-                            {paymentStep === 'processing' && (
-                                <div className="flex flex-col items-center justify-center py-8">
-                                    <div className="w-10 h-10 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4"></div>
-                                    <p className="text-purple-600 font-medium">Procesando pago seguro...</p>
+                                <div className="flex justify-between items-center mb-6 text-xl font-bold text-gray-900 border-b pb-4">
+                                    <span>Total:</span>
+                                    <span>${calculateTotal()}</span>
                                 </div>
-                            )}
 
-                            {paymentStep === 'success' && (
-                                <div className="text-center py-4 animate-fade-in">
-                                    <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <CheckCircle size={32} />
+                                {paymentStep === 'form' && (
+                                    <form onSubmit={handlePayment} className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Número de Tarjeta</label>
+                                            <input type="text" placeholder="0000 0000 0000 0000" required className="w-full p-2 border border-gray-300 rounded focus:border-purple-500 focus:outline-none" />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Expiración</label>
+                                                <input type="text" placeholder="MM/YY" required className="w-full p-2 border border-gray-300 rounded focus:border-purple-500 focus:outline-none" />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">CVV</label>
+                                                <input type="text" placeholder="123" required className="w-full p-2 border border-gray-300 rounded focus:border-purple-500 focus:outline-none" />
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="submit"
+                                            disabled={Number(calculateTotal()) === 0}
+                                            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+                                        >
+                                            Pagar Ahora
+                                        </button>
+                                    </form>
+                                )}
+
+                                {paymentStep === 'processing' && (
+                                    <div className="flex flex-col items-center justify-center py-8">
+                                        <div className="w-10 h-10 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4"></div>
+                                        <p className="text-purple-600 font-medium">Procesando pago seguro...</p>
                                     </div>
-                                    <h4 className="text-xl font-bold text-green-700 mb-2">¡Pago Exitoso!</h4>
-                                    <p className="text-sm text-gray-600">
-                                        Gracias por su compra. Sus productos serán entregados en la <span className="font-bold">oficina del aeropuerto de destino</span> ({destino.aeropuerto}).
-                                    </p>
-                                    <button
-                                        onClick={() => { setPaymentStep('form'); setShopItems(shopItems.map(i => ({ ...i, selected: false }))) }}
-                                        className="mt-6 text-sm text-purple-600 underline hover:text-purple-800"
-                                    >
-                                        Realizar otra compra
-                                    </button>
-                                </div>
-                            )}
+                                )}
+
+                                {paymentStep === 'success' && (
+                                    <div className="text-center py-4 animate-fade-in">
+                                        <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <CheckCircle size={32} />
+                                        </div>
+                                        <h4 className="text-xl font-bold text-green-700 mb-2">¡Pago Exitoso!</h4>
+                                        <p className="text-sm text-gray-600">
+                                            Gracias por su compra. Sus productos serán entregados en la <span className="font-bold">oficina del aeropuerto de destino</span> ({destino.aeropuerto}).
+                                        </p>
+                                        <button
+                                            onClick={() => { setPaymentStep('form'); setShopItems(shopItems.map(i => ({ ...i, selected: false }))) }}
+                                            className="mt-6 text-sm text-purple-600 underline hover:text-purple-800"
+                                        >
+                                            Realizar otra compra
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 };

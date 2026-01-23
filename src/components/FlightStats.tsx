@@ -46,12 +46,12 @@ export const FlightStats: React.FC<FlightStatsProps> = ({ data }) => {
 
                 {/* Etiquetas superpuestas manualmente para coincidir con el diseño */}
                 <div className="absolute top-0 left-0 text-[10px] text-gray-800 -translate-y-2 -translate-x-4 w-32 text-center leading-3">
-                    Posibilidad salir en hora<br />
+                    Probabilidad de llegada puntual<br />
                     <span className="font-bold">{data.onTimePercentage}%</span>
                 </div>
 
                 <div className="absolute bottom-0 right-0 text-[10px] text-gray-800 translate-y-2 translate-x-4 w-32 text-center leading-3">
-                    Posibilidad de retraso<br />
+                    Probabilidad de llegada atrasada<br />
                     <span className="font-bold">{data.delayPercentage}%</span>
                 </div>
 
