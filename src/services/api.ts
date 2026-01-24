@@ -1,4 +1,20 @@
 
+/**
+ * @fileoverview Servicios de API para la aplicación FlightOnTime
+ *
+ * Este módulo contiene todas las funciones para interactuar con el backend,
+ * incluyendo tipos TypeScript para requests y responses, y manejo de errores.
+ *
+ * Arquitectura:
+ * - Cliente HTTP: Axios con configuración centralizada
+ * - Tipos: Interfaces TypeScript para type safety
+ * - Error Handling: Try-catch con logging consistente
+ * - Endpoints: RESTful API con base URL http://localhost:8080/api/v1
+ *
+ * @author Eduardo Chile
+ * @version 1.0.0
+ */
+
 import axios from 'axios';
 
 // Interfaz para la solicitud de predicción de vuelo
@@ -38,7 +54,7 @@ export interface FlightData {
 
 /**
  * Función para obtener la predicción de vuelo desde el backend.
- * Realiza una petición POST al endpoint /api/v1/predict-smart.
+ * Realiza una petición POST al endpoint /api/v1/predict.
  * 
  * @param flightNumber Número de vuelo
  * @param airline Aerolínea
@@ -80,7 +96,7 @@ export const fetchFlightPrediction = async (
 
         // Llamada al servicio backend
         const response = await axios.post<FlightPredictionResponse>(
-            'http://localhost:8080/api/v1/predict-smart',
+            'http://localhost:8080/api/v1/predict',
             requestData,
             {
                 headers: {

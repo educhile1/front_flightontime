@@ -89,7 +89,7 @@ export const FlightForm: React.FC<FlightFormProps> = ({
             }
         };
         fetchData();
-    }, []);
+    }, [onOriginChange, onDestinationChange]);
 
     // Manejador del envío del formulario
     const handleSubmit = (e: React.FormEvent) => {

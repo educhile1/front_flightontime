@@ -184,7 +184,7 @@ export const RouteDelayChart: React.FC<RouteDelayChartProps> = ({ originId, dest
                                     <Cell key={`cell-${index}`} fill={index === 0 ? '#10B981' : '#6366F1'} />
                                 ))
                             }
-                            <LabelList dataKey="avgDelay" position="top" fill="#6B7280" fontSize={11} formatter={(val: any) => `${val}m`} />
+                            <LabelList dataKey="avgDelay" position="top" fill="#6B7280" fontSize={11} formatter={(val) => `${val}m`} />
                         </Bar>
                     </BarChart>
                 </ResponsiveContainer>

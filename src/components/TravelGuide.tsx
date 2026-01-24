@@ -6,7 +6,6 @@ import {
     Utensils,
     ShieldAlert,
     Camera,
-    ExternalLink,
     Plug,
     Phone,
     Wallet,

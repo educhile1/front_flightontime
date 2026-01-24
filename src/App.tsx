@@ -56,7 +56,7 @@ function App() {
   }, []);
 
   // Función para obtener la guía de viaje
-  const handleFetchGuide = async () => {
+  const handleFetchGuide = React.useCallback(async () => {
     if (!selectedDestination) {
       setMessage('Por favor selecciona un destino primero.');
       setIsError(true);
@@ -64,7 +64,7 @@ function App() {
     }
 
     // Usamos una fecha por defecto si no hay una seleccionada en el form (no tenemos acceso directo al estado del form aqui aun)
-    // TODO: Idealmente levantar el estado de fecha tambien a App.tsx. 
+    // TODO: Idealmente levantar el estado de fecha tambien a App.tsx.
     // Por ahora, asumimos "15-10" como ejemplo o la fecha actual.
     // Para una mejor UX, vamos a requerir que el usuario haga una búsqueda primero o comparta el estado.
     // SOLUCION RAPIDA: Usar la fecha actual formateada DD-MM
@@ -92,14 +92,14 @@ function App() {
     } finally {
       setIsGuideLoading(false);
     }
-  };
+  }, [selectedDestination]);
 
   // Efecto para cargar la guía cuando se cambia a la vista de guía si ya hay destino
   React.useEffect(() => {
     if (currentView === 'guide' && !travelGuide && selectedDestination) {
       handleFetchGuide();
     }
-  }, [currentView, selectedDestination]);
+  }, [currentView, selectedDestination, handleFetchGuide, travelGuide]);
 
 
   // Función principal para manejar la búsqueda.

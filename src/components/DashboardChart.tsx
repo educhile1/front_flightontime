@@ -98,7 +98,7 @@ export const DashboardChart: React.FC<DashboardChartProps> = ({ airlineId }) => 
                             dataKey="periodo"
                             axisLine={false}
                             tickLine={false}
-                            tick={{ angle: -90, textAnchor: 'end', fill: '#6B7280' } as any}
+                            tick={{ angle: -90, textAnchor: 'end', fill: '#6B7280' } as React.ComponentProps<typeof XAxis>['tick']}
                             dy={0}
                             interval={0}
                             height={70}
@@ -202,7 +202,7 @@ export const DashboardChart: React.FC<DashboardChartProps> = ({ airlineId }) => 
                             dot={{ fill: '#F59E0B', r: 4 }}
                             activeDot={{ r: 6 }}
                         >
-                            <LabelList dataKey="percentage" position="top" fill="#F59E0B" formatter={(value: any) => `${value}%`} />
+                            <LabelList dataKey="percentage" position="top" fill="#F59E0B" formatter={(value) => `${value}%`} />
                         </Line>
                     </ComposedChart>
                 </ResponsiveContainer>
