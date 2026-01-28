@@ -593,7 +593,7 @@ Para soporte técnico o preguntas:
 
 ---
 
-**Desarrollado con ❤️ por Eduardo Chile**
+**Desarrollado con ❤️ por @educhile1**
 
 ---
 
